@@ -29,12 +29,13 @@ public class HttpResponse {
     /** Read response from server. */
     public HttpResponse(DataInputStream fromServer) {
 	/* Length of the object */
+		BufferedReader og_from = new BufferedReader(new InputStreamReader(fromServer));
 		int length = -1;
 		boolean gotStatusLine = false;
 
 		/* First read status line and response headers */
 		try {
-		    String line = /* Fill in */;
+		    String line = og_from.readLine();
 		    while (line.length() != 0) {
 			if (!gotStatusLine) {
 			    statusLine = line;
@@ -58,8 +59,8 @@ public class HttpResponse {
 			    String[] tmp = line.split(" ");
 			    length = Integer.parseInt(tmp[1]);
 			}
-			
-			line = fromServer.readLine();
+
+			line = og_from.readLine();
 		    }
 		} catch (IOException e) {
 		    System.out.println("Error reading headers from server: " + e);

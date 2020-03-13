@@ -17,9 +17,11 @@ public class HttpRequest {
 
     /** Create HttpRequest by reading it from the client socket */
     public HttpRequest(BufferedReader from) {
+
+    BufferedReader og_from = new BufferedReader(from);
 	String firstLine = "";
 	try {
-	    firstLine = from.readLine();
+	    firstLine = og_from.readLine();
 	} catch (IOException e) {
 	    System.out.println("Error reading request line: " + e);
 	}
@@ -29,7 +31,7 @@ public class HttpRequest {
 	URI = tmp[1];
 	version = tmp[2];
 
-	if(URI[0:6] == "http://"){
+	if(URI.startsWith("http://")){
 		String[] tmpURI = URI.split("http://");
 		URI = tmpURI[1].substring(tmpURI[1].indexOf("/"));
 	}
@@ -41,7 +43,7 @@ public class HttpRequest {
 	}
 
 	try {
-	    String line = from.readLine();
+	    String line = og_from.readLine();
 	    while (line.length() != 0) {
 			headers += line + CRLF;
 			/* We need to find host header to know which server to
@@ -57,15 +59,17 @@ public class HttpRequest {
 					port = HTTP_PORT;
 			    }
 			}
-
-			line = from.readLine();
+			//new BufferedReader
+			line = og_from.readLine();
 	    }
 
 	} catch (IOException e) {
 	    System.out.println("Error reading from socket: " + e);
 	    return;
 	}
+
 	System.out.println("Host to contact is: " + host + " at port " + port);
+
     }
 
     /** Return host for which this request is intended */

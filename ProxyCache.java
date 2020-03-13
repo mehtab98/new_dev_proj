@@ -39,7 +39,7 @@ public class ProxyCache{
 		/* Read request */
 		try {
 
-		    BufferedReader fromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		    BufferedReader fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		    request = new HttpRequest(fromClient);
 		    //socket.accept()
 		} catch (IOException e) {
@@ -111,13 +111,12 @@ public class ProxyCache{
 
 		    client = socket.accept(); 
 
-		    Runnable task = new Runnable(){
-		    	@Overide
-		    	public void run(){
+		    Thread task = new Thread(){
+		    	public void run(Socket client){
 		    		handle(client); 
 		    	}
-		    }
-			
+		    };
+			System.out.println("this thread is correct");
 			//handle(client);
 			task.start(); 
 
